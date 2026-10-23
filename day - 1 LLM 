@@ -1,0 +1,132 @@
+GenAI Learning Notes — Week 1, Lesson 1
+What is an LLM, and how does it generate a response?
+1. What is an LLM?
+A Large Language Model (LLM) is a neural network trained on large amounts of text to learn patterns in language and generate responses based on an input and its context.
+Think of an LLM as a sophisticated autocomplete system. Instead of simply completing a word, it can generate sentences, explain concepts, summarize information, and write code.
+For example, given:
+The best way to use my rewards points is to...
+
+The model estimates which token is likely to come next, generates one, and repeats the process to construct a complete response.
+Key takeaway: Many modern LLMs generate text through next-token prediction.
+2. How does an LLM generate a response?
+The process can be understood in six steps.
+1
+
+Input text
+
+The user submits a prompt.
+
+2
+
+Tokenization
+
+The text is split into tokens and mapped to token IDs.
+
+3
+
+Embeddings
+
+Token IDs are converted into numerical vectors, with positional information incorporated as appropriate.
+
+4
+
+Transformer processing
+
+Attention and other neural-network operations process the tokens in context.
+
+5
+
+Next-token prediction
+
+The model produces scores for possible next tokens, which are converted into probabilities.
+
+6
+
+Token selection and repetition
+
+A decoding strategy selects the next token. Generation continues until the response ends.
+
+
+The key idea is that the model generates a sequence of tokens, using the context available at each generation step.
+3. What are tokens and embeddings?
+Tokens are the units of text that a model processes. Depending on the tokenizer, a token might represent a whole word, part of a word, punctuation, or another text unit.
+For example, the word redeeming might be represented as one token or several tokens, depending on the tokenizer.
+Token IDs are numerical identifiers assigned to tokens by the tokenizer.
+Embeddings are numerical vectors associated with token IDs. They give the neural network numerical representations it can process and transform.
+A useful distinction:
+- Tokenization converts text into token IDs.
+- Embedding lookup converts token IDs into vectors.
+- Transformer layers process those vectors in context.
+Embeddings are not simply dictionary definitions. Their learned numerical patterns help the model represent relationships and process language.
+4. What is a Transformer, and what does attention do?
+A Transformer is a neural-network architecture used by many modern LLMs.
+Its important components include:
+- Attention: Helps the model determine which other tokens are relevant when processing a token in context.
+- Feed-forward layers: Perform additional neural-network computations to transform representations.
+- Other components: Include residual connections and normalization, depending on the architecture.
+For example:
+I redeemed my points because they were expiring.
+
+Attention helps the model relate they to points, using the context of the sentence.
+Remember: Attention helps process context; it does not independently generate or choose the next token. The complete Transformer and its output layers contribute to the prediction.
+5. Why is an LLM called a prediction model?
+Suppose the prompt is:
+The capital of France is...
+
+The model calculates scores for possible next tokens and converts them into probabilities.
+For illustration only:
+Possible next token	Illustrative probability
+Paris	92%
+Lyon	2%
+London	1%
+Other tokens	5%
+A decoding strategy selects a token based on the model's output and its configuration. The model then uses the growing sequence to generate subsequent tokens.
+These numbers are illustrative, not measured results from a real model.
+Important distinction:
+- Prediction means estimating likely next tokens based on learned patterns and context.
+- Deterministic calculation means applying a defined rule to calculate a result.
+An LLM performs mathematical calculations internally, but its text generation is still a prediction process. Depending on the decoding settings, the output may be probabilistic or deterministic at the token-selection stage.
+6. Training versus inference
+These are two different phases of working with an LLM.
+Training	Inference
+The model learns patterns from training data.	The trained model generates a response to an input.
+Training adjusts model parameters.	The existing parameters are used to process the input.
+Computationally expensive for large models.	Happens when an application sends a request to the model.
+Many LLMs are pretrained using next-token prediction and then further trained or tuned to follow instructions and produce more useful responses.
+Inference does not normally mean the model is permanently learning from each conversation.
+7. How does this fit into my Java backend?
+In your AI-powered Rewards Redemption System, the LLM should handle natural-language interaction while your Java backend remains responsible for authoritative business data and transactions.
+Customer
+"How many points do I have?"
+
+LLM / AI concierge
+Interprets the request and invokes an approved tool when appropriate.
+
+Spring Boot rewards service
+Authenticates the user and retrieves the authoritative balance.
+
+LLM generates a response
+Explains the verified result to the customer.
+
+
+Why this separation matters:
+- Accuracy: The LLM does not inherently know a customer's current balance.
+- Security: The backend must enforce authentication and authorization.
+- Consistency: Redemption transactions must follow business rules and prevent double spending.
+- Reliability: The backend should validate operations rather than trusting generated text.
+The LLM can interpret a request and call an approved function, but the Java service decides whether the operation is valid.
+8. Senior-engineer interview answer
+Question: How does an LLM generate a response?
+An LLM is a neural network trained to learn patterns in language. Many modern LLMs use a Transformer architecture and generate text autoregressively, meaning they predict the next token based on the preceding context.
+First, the input text is tokenized into token IDs and converted into numerical representations called embeddings. These representations pass through Transformer layers, where attention helps the model process relationships between tokens alongside other neural-network operations.
+The model then produces scores for possible next tokens. Those scores are converted into probabilities, and a decoding strategy selects the next token. This process repeats until the response is complete.
+In a production application, I separate language generation from business logic. For example, in a rewards redemption system, the LLM can interpret the customer's request and call an approved tool, while my Spring Boot services remain responsible for checking balances, enforcing eligibility rules, and safely executing transactions.
+
+9. Active-recall questions for revision
+Try answering these without reading the notes first.
+1. Why is an LLM described as a next-token prediction model?
+2. What is the difference between a token ID and an embedding?
+3. What does attention do inside a Transformer?
+4. What is the difference between training and inference?
+5. Why should a Java rewards service, rather than an LLM, be the source of truth for a customer's balance?
+Progress: Week 1 — LLM basics — In Progress. The next lesson is Tokens: why one token is not always one word.
